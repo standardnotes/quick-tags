@@ -19,7 +19,6 @@ angular.module('app', [
       })
       $scope.showAutocomplete($scope.results.length > 0);
       $timeout(function(){
-        console.log("Scroll height:", document.documentElement.scrollHeight);
         extensionManager.setSize("content", "100%", document.documentElement.scrollHeight);
       })
     }
