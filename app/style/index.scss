@@ -29,18 +29,20 @@ input {
   font-size: 14px;
 }
 
+$blue-color: rgba(#086dd6, 0.5);
+
 .circle {
   display: inline-block;
   height: 10px;
   width: 10px;
   border-radius: 50%;
   margin-right: 4px;
-  background: purple;
+  background: $blue-color;
   vertical-align: middle;
 }
 
 .associates {
-  margin-top: 5px;
+  margin-top: 6px;
   .empty {
     opacity: 0.1;
   }
@@ -52,7 +54,7 @@ input {
       display: inline-block;
     }
     .circle {
-      background-color: rgba(gray, 0.5);
+      background-color: $blue-color;
     }
   }
 }

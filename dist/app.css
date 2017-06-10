@@ -79,12 +79,12 @@ input {
   width: 10px;
   border-radius: 50%;
   margin-right: 4px;
-  background: purple;
+  background: rgba(8, 109, 214, 0.5);
   vertical-align: middle;
 }
 
 .associates {
-  margin-top: 5px;
+  margin-top: 6px;
 }
 .associates .empty {
   opacity: 0.1;
@@ -98,7 +98,7 @@ input {
   display: inline-block;
 }
 .associates .associate .circle {
-  background-color: rgba(128, 128, 128, 0.5);
+  background-color: rgba(8, 109, 214, 0.5);
 }
 
 .results {
