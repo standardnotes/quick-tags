@@ -33383,12 +33383,16 @@ angular.module('app', [
     $scope.tagsInputChange = function($event) {
       var input = $scope.formData.input;
       var lastTag = input.split("#").slice(-1)[0];
+
       $scope.results = $scope.tags.filter(function(tag){
         return lastTag.length && tag.content.title.startsWith(lastTag);
       }).sort(function(a, b){
         return a.content.title > b.content.title;
       })
+
       $scope.showAutocomplete($scope.results.length > 0);
+      $scope.highlightTag($scope.results[0]);
+
       $timeout(function(){
         extensionManager.setSize("content", "100%", document.documentElement.scrollHeight);
       })
@@ -33399,10 +33403,11 @@ angular.module('app', [
 
     }
 
-    $scope.selectedTag = function(tag) {
+    $scope.selectTag = function(tag) {
       extensionManager.associateItem(tag);
       $scope.showAutocomplete(false);
       $scope.formData.input = "";
+      $scope.highlightedTag = null;
     }
 
     $scope.removeActiveTag = function(tag) {
@@ -33410,7 +33415,6 @@ angular.module('app', [
     }
 
     extensionManager.streamItems(function(newTags) {
-      console.log("New stream data:", newTags);
 
       var allTags = $scope.tags || [];
       for(var tag of newTags) {
@@ -33426,7 +33430,7 @@ angular.module('app', [
 
       $scope.tags = allTags;
 
-    }.bind(this))
+    }.bind(this));
 
     extensionManager.streamReferences(function(tagReferences){
       var tags = $scope.tags.filter(function(tag){
@@ -33441,10 +33445,67 @@ angular.module('app', [
       })
     })
 
-    extensionManager.setSize("container", "100%", defaultHeight);
-  }
+    $scope.highlightTag = function(tag) {
+      $scope.highlightedTag = tag;
+    }
 
+    $scope.highlightNextResult = function() {
+      if(!$scope.results) {
+        return;
+      }
+      var index = $scope.results.indexOf($scope.highlightedTag);
+      $scope.highlighResultAtIndex(index + 1);
+    }
+
+    $scope.highlightPreviousResult = function() {
+      if(!$scope.results) {
+        return;
+      }
+      var index = $scope.results.indexOf($scope.highlightedTag);
+      index--;
+      if(index < 0) {
+        index = $scope.results.length - 1;
+      }
+      $scope.highlighResultAtIndex(index);
+    }
+
+    $scope.highlighResultAtIndex = function(index) {
+      $scope.highlightTag($scope.results[index % $scope.results.length]);
+    }
+
+    $scope.onEnter = function() {
+      if($scope.highlightedTag) {
+        $scope.selectTag($scope.highlightedTag);
+      } else if($scope.formData.input) {
+        extensionManager.createItem({content_type: "Tag", content: {title: $scope.formData.input}});
+        $scope.formData.input = "";
+      }
+    }
+
+    extensionManager.setSize("container", "100%", defaultHeight);
+
+    document.onkeydown = handleArrowKey;
+
+    function handleArrowKey(e) {
+        e = e || window.event;
+        if (e.keyCode == '38') {
+          // up arrow
+          $timeout(function(){
+            $scope.highlightPreviousResult();
+          })
+        } else if (e.keyCode == '40') {
+          // down arrow
+          $timeout(function(){
+            $scope.highlightNextResult();
+          });
+        }
+    }
+
+  }
 }
+
+// required for firefox
+HomeCtrl.$$ngIsClass = true;
 
 angular.module('app').controller('HomeCtrl', HomeCtrl);
 ;class ExtensionManager {
@@ -33507,8 +33568,6 @@ angular.module('app').controller('HomeCtrl', HomeCtrl);
     sentMessage.callback = callback;
     this.sentMessages.push(sentMessage);
 
-    // console.log("Autocomplete is sending message:", message, window.parent);
-
     window.parent.postMessage(message, '*');
   }
 
@@ -33540,15 +33599,22 @@ angular.module('app').controller('HomeCtrl', HomeCtrl);
   }
 
   selectItem(item) {
-    this.postMessage("select-item", this.jsonObjectForItem(item));
+    this.postMessage("select-item", {item: this.jsonObjectForItem(item)});
+  }
+
+  createItem(item) {
+    this.postMessage("create-item", {item: this.jsonObjectForItem(item)}, function(data){
+      var item = data.item;
+      this.associateItem(item);
+    }.bind(this));
   }
 
   associateItem(item) {
-    this.postMessage("associate-item", this.jsonObjectForItem(item));
+    this.postMessage("associate-item", {item: this.jsonObjectForItem(item)});
   }
 
   deassociateItem(item) {
-    this.postMessage("deassociate-item", this.jsonObjectForItem(item));
+    this.postMessage("deassociate-item", {item: this.jsonObjectForItem(item)});
   }
 
   clearSelection() {
@@ -33640,15 +33706,18 @@ angular.module('app').service('extensionManager', ExtensionManager);
 
 
   $templateCache.put('home.html',
-    "<input ng-change='tagsInputChange($event)' ng-model='formData.input' placeholder='Enter tags' type='text'>\n" +
+    "<input ng-change='tagsInputChange($event)' ng-keyup='$event.keyCode == 13 &amp;&amp; onEnter()' ng-model='formData.input' placeholder='Add tags...' type='text'>\n" +
     "<div class='associates'>\n" +
+    "<div class='empty' ng-if='activeTags.length === 0'>\n" +
+    "No associated tags\n" +
+    "</div>\n" +
     "<div class='associate' ng-click='removeActiveTag(tag)' ng-repeat='tag in activeTags'>\n" +
     "<div class='circle'></div>\n" +
     "<div class='title'>{{tag.content.title}}</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class='results' ng-if='formData.showAutocomplete'>\n" +
-    "<div class='result' ng-click='selectedTag(tag)' ng-repeat='tag in results'>\n" +
+    "<div class='result' ng-class='{&#39;highlighted&#39; : highlightedTag == tag}' ng-click='selectTag(tag)' ng-mouseover='highlightTag(tag)' ng-repeat='tag in results'>\n" +
     "<div class='circle'></div>\n" +
     "<div class='title'>{{tag.content.title}}</div>\n" +
     "</div>\n" +

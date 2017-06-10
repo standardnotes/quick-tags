@@ -58,8 +58,6 @@ class ExtensionManager {
     sentMessage.callback = callback;
     this.sentMessages.push(sentMessage);
 
-    // console.log("Autocomplete is sending message:", message, window.parent);
-
     window.parent.postMessage(message, '*');
   }
 
@@ -91,15 +89,22 @@ class ExtensionManager {
   }
 
   selectItem(item) {
-    this.postMessage("select-item", this.jsonObjectForItem(item));
+    this.postMessage("select-item", {item: this.jsonObjectForItem(item)});
+  }
+
+  createItem(item) {
+    this.postMessage("create-item", {item: this.jsonObjectForItem(item)}, function(data){
+      var item = data.item;
+      this.associateItem(item);
+    }.bind(this));
   }
 
   associateItem(item) {
-    this.postMessage("associate-item", this.jsonObjectForItem(item));
+    this.postMessage("associate-item", {item: this.jsonObjectForItem(item)});
   }
 
   deassociateItem(item) {
-    this.postMessage("deassociate-item", this.jsonObjectForItem(item));
+    this.postMessage("deassociate-item", {item: this.jsonObjectForItem(item)});
   }
 
   clearSelection() {

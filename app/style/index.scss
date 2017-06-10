@@ -1,7 +1,7 @@
 @import 'reset';
 
 html {
-  height: 50px;
+  height: 45px;
   background-color: transparent;
   overflow: hidden;
 }
@@ -17,7 +17,7 @@ body {
     "Ubuntu", "Cantarell", "Fira Sans",
     "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
-  height: 50px;
+  height: 45px;
   font-size: 14px;
 }
 
@@ -41,6 +41,9 @@ input {
 
 .associates {
   margin-top: 5px;
+  .empty {
+    opacity: 0.1;
+  }
   .associate {
     display: inline-block;
     margin-right: 10px;
@@ -65,9 +68,10 @@ input {
     height: 22px;
     padding-top: 10px;
 
-    &:hover {
+    &.highlighted {
       background-color: rgba(gray, 0.1);
     }
+
     .title {
       display: inline-block;
     }
