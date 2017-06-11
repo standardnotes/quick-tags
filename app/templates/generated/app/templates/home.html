@@ -1,4 +1,4 @@
-<input ng-change='tagsInputChange($event)' ng-keyup='$event.keyCode == 13 &amp;&amp; onEnter()' ng-model='formData.input' placeholder='Add tags...' type='text'>
+<input class='body-text-color' ng-change='tagsInputChange($event)' ng-keyup='$event.keyCode == 13 &amp;&amp; onEnter()' ng-model='formData.input' placeholder='Add tags...' type='text'>
 <div class='associates'>
 <div class='empty' ng-if='activeTags.length === 0'>
 No associated tags
@@ -8,7 +8,7 @@ No associated tags
 <div class='title'>{{tag.content.title}}</div>
 </div>
 </div>
-<div class='results' ng-if='formData.showAutocomplete'>
+<div class='results body-background-color body-text-color' ng-if='formData.showAutocomplete'>
 <div class='result' ng-class='{&#39;highlighted&#39; : highlightedTag == tag}' ng-click='selectTag(tag)' ng-mouseover='highlightTag(tag)' ng-repeat='tag in results'>
 <div class='circle'></div>
 <div class='title'>{{tag.content.title}}</div>

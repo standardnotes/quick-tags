@@ -33375,6 +33375,7 @@ class ComponentManager {
   constructor(loggingEnabled) {
     this.sentMessages = [];
     this.messageQueue = [];
+    this.loggingEnabled = loggingEnabled;
 
     window.addEventListener("message", function (event) {
       if (loggingEnabled) {
@@ -33388,6 +33389,8 @@ class ComponentManager {
     if (payload.action === "component-registered") {
       this.sessionKey = payload.sessionKey;
       this.onReady();
+    } else if (payload.action === "themes") {
+      this.activateThemes(payload.data.themes);
     } else if (payload.original) {
       // get callback from queue
       var originalMessage = this.sentMessages.filter(function (message) {
@@ -33429,6 +33432,10 @@ class ComponentManager {
     sentMessage.callback = callback;
     this.sentMessages.push(sentMessage);
 
+    if (this.loggingEnabled) {
+      console.log("Posting message:", message);
+    }
+
     window.parent.postMessage(message, '*');
   }
 
@@ -33443,13 +33450,10 @@ class ComponentManager {
     }.bind(this));
   }
 
-  streamReferences(callback) {
-    this.postMessage("stream-references", {}, function (data) {
-      var references = data.references;
-      var tagRefs = references.filter(function (ref) {
-        return ref.content_type === "Tag";
-      });
-      callback(tagRefs);
+  streamContextItem(callback) {
+    this.postMessage("stream-context-item", null, function (data) {
+      var item = data.item;
+      callback(item);
     }.bind(this));
   }
 
@@ -33498,6 +33502,47 @@ class ComponentManager {
     copy.parent = null;
     return copy;
   }
+
+  /* Themes */
+
+  activateThemes(urls) {
+    this.deactivateAllCustomThemes();
+
+    if (this.loggingEnabled) {
+      console.log("Activating themes:", urls);
+    }
+
+    if (!urls) {
+      return;
+    }
+
+    for (var url of urls) {
+      if (!url) {
+        continue;
+      }
+
+      var link = document.createElement("link");
+      link.href = url;
+      link.type = "text/css";
+      link.rel = "stylesheet";
+      link.media = "screen,print";
+      link.className = "custom-theme";
+      document.getElementsByTagName("head")[0].appendChild(link);
+    }
+  }
+
+  deactivateAllCustomThemes() {
+    var elements = document.getElementsByClassName("custom-theme");
+
+    [].forEach.call(elements, function (element) {
+      if (element) {
+        element.disabled = true;
+        element.parentNode.removeChild(element);
+      }
+    });
+  }
+
+  /* Utilities */
 
   generateUUID() {
     var crypto = window.crypto || window.msCrypto;
@@ -33555,14 +33600,14 @@ angular.module('app', []);class HomeCtrl {
 
       $scope.showAutocomplete($scope.results.length > 0);
       $scope.highlightTag($scope.results[0]);
-
-      $timeout(function () {
-        componentManager.setSize("content", "100%", document.documentElement.scrollHeight);
-      });
     };
 
     $scope.showAutocomplete = function (show) {
       $scope.formData.showAutocomplete = show;
+
+      $timeout(function () {
+        componentManager.setSize("content", "100%", document.documentElement.scrollHeight);
+      });
     };
 
     $scope.selectTag = function (tag) {
@@ -33593,10 +33638,10 @@ angular.module('app', []);class HomeCtrl {
       });
     }.bind(this));
 
-    componentManager.streamReferences(function (tagReferences) {
+    componentManager.streamContextItem(function (item) {
       $timeout(function () {
         var tags = $scope.tags.filter(function (tag) {
-          var matchingReference = tagReferences.filter(function (ref) {
+          var matchingReference = item.content.references.filter(function (ref) {
             return ref.uuid === tag.uuid;
           })[0];
           return matchingReference;
@@ -33708,7 +33753,7 @@ angular.module('app').controller('HomeCtrl', HomeCtrl);
 
 
   $templateCache.put('home.html',
-    "<input ng-change='tagsInputChange($event)' ng-keyup='$event.keyCode == 13 &amp;&amp; onEnter()' ng-model='formData.input' placeholder='Add tags...' type='text'>\n" +
+    "<input class='body-text-color' ng-change='tagsInputChange($event)' ng-keyup='$event.keyCode == 13 &amp;&amp; onEnter()' ng-model='formData.input' placeholder='Add tags...' type='text'>\n" +
     "<div class='associates'>\n" +
     "<div class='empty' ng-if='activeTags.length === 0'>\n" +
     "No associated tags\n" +
@@ -33718,7 +33763,7 @@ angular.module('app').controller('HomeCtrl', HomeCtrl);
     "<div class='title'>{{tag.content.title}}</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class='results' ng-if='formData.showAutocomplete'>\n" +
+    "<div class='results body-background-color body-text-color' ng-if='formData.showAutocomplete'>\n" +
     "<div class='result' ng-class='{&#39;highlighted&#39; : highlightedTag == tag}' ng-click='selectTag(tag)' ng-mouseover='highlightTag(tag)' ng-repeat='tag in results'>\n" +
     "<div class='circle'></div>\n" +
     "<div class='title'>{{tag.content.title}}</div>\n" +

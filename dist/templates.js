@@ -33,7 +33,7 @@ angular.module('app').run(['$templateCache', function($templateCache) {
 
 
   $templateCache.put('home.html',
-    "<input ng-change='tagsInputChange($event)' ng-keyup='$event.keyCode == 13 &amp;&amp; onEnter()' ng-model='formData.input' placeholder='Add tags...' type='text'>\n" +
+    "<input class='body-text-color' ng-change='tagsInputChange($event)' ng-keyup='$event.keyCode == 13 &amp;&amp; onEnter()' ng-model='formData.input' placeholder='Add tags...' type='text'>\n" +
     "<div class='associates'>\n" +
     "<div class='empty' ng-if='activeTags.length === 0'>\n" +
     "No associated tags\n" +
@@ -43,7 +43,7 @@ angular.module('app').run(['$templateCache', function($templateCache) {
     "<div class='title'>{{tag.content.title}}</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class='results' ng-if='formData.showAutocomplete'>\n" +
+    "<div class='results body-background-color body-text-color' ng-if='formData.showAutocomplete'>\n" +
     "<div class='result' ng-class='{&#39;highlighted&#39; : highlightedTag == tag}' ng-click='selectTag(tag)' ng-mouseover='highlightTag(tag)' ng-repeat='tag in results'>\n" +
     "<div class='circle'></div>\n" +
     "<div class='title'>{{tag.content.title}}</div>\n" +

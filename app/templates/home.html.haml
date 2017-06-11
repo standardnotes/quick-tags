@@ -1,4 +1,4 @@
-%input{"type" => "text", "placeholder" => "Add tags...", "ng-model" => "formData.input", "ng-change" => "tagsInputChange($event)", "ng-keyup" => "$event.keyCode == 13 && onEnter()"}
+%input.body-text-color{"type" => "text", "placeholder" => "Add tags...", "ng-model" => "formData.input", "ng-change" => "tagsInputChange($event)", "ng-keyup" => "$event.keyCode == 13 && onEnter()"}
 
 .associates
   .empty{"ng-if" => "activeTags.length === 0"}
@@ -7,7 +7,7 @@
     .circle
     .title {{tag.content.title}}
 
-.results{"ng-if" => "formData.showAutocomplete"}
+.results.body-background-color.body-text-color{"ng-if" => "formData.showAutocomplete"}
   .result{"ng-repeat" => "tag in results", "ng-click" => "selectTag(tag)", "ng-mouseover" => "highlightTag(tag)", "ng-class" => "{'highlighted' : highlightedTag == tag}"}
     .circle
     .title {{tag.content.title}}

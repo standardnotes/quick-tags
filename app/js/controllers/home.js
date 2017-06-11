@@ -20,15 +20,14 @@ class HomeCtrl {
 
       $scope.showAutocomplete($scope.results.length > 0);
       $scope.highlightTag($scope.results[0]);
-
-      $timeout(function(){
-        componentManager.setSize("content", "100%", document.documentElement.scrollHeight);
-      })
     }
 
     $scope.showAutocomplete = function(show) {
       $scope.formData.showAutocomplete = show;
 
+      $timeout(function(){
+        componentManager.setSize("content", "100%", document.documentElement.scrollHeight);
+      })
     }
 
     $scope.selectTag = function(tag) {
@@ -60,10 +59,10 @@ class HomeCtrl {
 
     }.bind(this));
 
-    componentManager.streamReferences(function(tagReferences){
+    componentManager.streamContextItem(function(item){
       $timeout(function(){
         var tags = $scope.tags.filter(function(tag){
-          var matchingReference = tagReferences.filter(function(ref){
+          var matchingReference = item.content.references.filter(function(ref){
             return ref.uuid === tag.uuid
           })[0];
           return matchingReference;
