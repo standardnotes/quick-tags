@@ -1,12 +1,13 @@
-class ExtensionManager {
+class ComponentManager {
 
-  constructor($timeout) {
+  constructor(loggingEnabled) {
     this.sentMessages = [];
     this.messageQueue = [];
-    this.timeout = $timeout;
 
     window.addEventListener("message", function(event){
-      console.log("Autocomplete tags: message received", event.data);
+      if(loggingEnabled) {
+        console.log("Components API Message received:", event.data);
+      }
       this.handleMessage(event.data);
     }.bind(this), false);
   }
@@ -70,9 +71,7 @@ class ExtensionManager {
   streamItems(callback) {
     this.postMessage("stream-items", {content_types: ["Tag"]}, function(data){
       var tags = data.items;
-      this.timeout(function(){
-        callback(tags);
-      })
+      callback(tags);
     }.bind(this));
   }
 
@@ -82,9 +81,7 @@ class ExtensionManager {
       var tagRefs = references.filter(function(ref){
         return ref.content_type === "Tag";
       })
-      this.timeout(function(){
-        callback(tagRefs);
-      })
+      callback(tagRefs);
     }.bind(this));
   }
 
@@ -110,6 +107,11 @@ class ExtensionManager {
   clearSelection() {
     this.postMessage("clear-selection", {content_type: "Tag"});
   }
+
+  deleteItem(item) {
+    this.postMessage("delete-item", {item: this.jsonObjectForItem(item)});
+  }
+
 
   saveItem(item) {
     this.saveItems[item];
@@ -157,7 +159,6 @@ class ExtensionManager {
       return uuid;
     }
   }
-
 }
 
-angular.module('app').service('extensionManager', ExtensionManager);
+window.ComponentManager = ComponentManager;

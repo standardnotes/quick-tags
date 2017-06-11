@@ -1,5 +1,9 @@
 class HomeCtrl {
-  constructor($rootScope, $scope, $timeout, extensionManager) {
+  constructor($rootScope, $scope, $timeout) {
+
+    let componentManager = new window.ComponentManager();
+
+    console.log(componentManager);
 
     $scope.formData = {};
     let defaultHeight = 45;
@@ -18,7 +22,7 @@ class HomeCtrl {
       $scope.highlightTag($scope.results[0]);
 
       $timeout(function(){
-        extensionManager.setSize("content", "100%", document.documentElement.scrollHeight);
+        componentManager.setSize("content", "100%", document.documentElement.scrollHeight);
       })
     }
 
@@ -28,44 +32,46 @@ class HomeCtrl {
     }
 
     $scope.selectTag = function(tag) {
-      extensionManager.associateItem(tag);
+      componentManager.associateItem(tag);
       $scope.showAutocomplete(false);
       $scope.formData.input = "";
       $scope.highlightedTag = null;
     }
 
     $scope.removeActiveTag = function(tag) {
-      extensionManager.deassociateItem(tag);
+      componentManager.deassociateItem(tag);
     }
 
-    extensionManager.streamItems(function(newTags) {
-
-      var allTags = $scope.tags || [];
-      for(var tag of newTags) {
-        var existing = allTags.filter(function(tagCandidate){
-          return tagCandidate.uuid === tag.uuid;
-        })[0];
-        if(existing) {
-          Object.assign(existing, tag);
-        } else {
-          allTags.push(tag);
+    componentManager.streamItems(function(newTags) {
+      $timeout(function(){
+        var allTags = $scope.tags || [];
+        for(var tag of newTags) {
+          var existing = allTags.filter(function(tagCandidate){
+            return tagCandidate.uuid === tag.uuid;
+          })[0];
+          if(existing) {
+            Object.assign(existing, tag);
+          } else {
+            allTags.push(tag);
+          }
         }
-      }
-
-      $scope.tags = allTags;
+        $scope.tags = allTags;
+      })
 
     }.bind(this));
 
-    extensionManager.streamReferences(function(tagReferences){
-      var tags = $scope.tags.filter(function(tag){
-        var matchingReference = tagReferences.filter(function(ref){
-          return ref.uuid === tag.uuid
-        })[0];
-        return matchingReference;
-      })
+    componentManager.streamReferences(function(tagReferences){
+      $timeout(function(){
+        var tags = $scope.tags.filter(function(tag){
+          var matchingReference = tagReferences.filter(function(ref){
+            return ref.uuid === tag.uuid
+          })[0];
+          return matchingReference;
+        })
 
-      $scope.activeTags = tags.sort(function(a, b){
-        return a.content.title > b.content.title;
+        $scope.activeTags = tags.sort(function(a, b){
+          return a.content.title > b.content.title;
+        })
       })
     })
 
@@ -101,12 +107,12 @@ class HomeCtrl {
       if($scope.highlightedTag) {
         $scope.selectTag($scope.highlightedTag);
       } else if($scope.formData.input) {
-        extensionManager.createItem({content_type: "Tag", content: {title: $scope.formData.input}});
+        componentManager.createItem({content_type: "Tag", content: {title: $scope.formData.input}});
         $scope.formData.input = "";
       }
     }
 
-    extensionManager.setSize("container", "100%", defaultHeight);
+    componentManager.setSize("container", "100%", defaultHeight);
 
     document.onkeydown = handleArrowKey;
 

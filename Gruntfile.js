@@ -5,7 +5,7 @@ module.exports = function(grunt) {
     watch: {
       js: {
         files: ['./app/js/**/*.js'],
-        tasks: ['babel', 'browserify', 'concat:app', 'concat:lib', 'concat:dist', 'ngAnnotate'],
+        tasks: ['concat:app', 'babel', 'browserify',  'concat:lib', 'concat:dist', 'ngAnnotate'],
         options: {
           spawn: false,
         },
@@ -64,6 +64,7 @@ module.exports = function(grunt) {
       lib: {
         src: [
           'node_modules/angular/angular.js',
+          'bower_components/components-api/dist/dist.js'
         ],
         dest: 'dist/lib.js',
       },
@@ -89,11 +90,12 @@ module.exports = function(grunt) {
    babel: {
         options: {
             sourceMap: true,
-            presets: ['es2016']
+            presets: ['es2016'],
+            "sourceType": "module",
         },
         dist: {
             files: {
-                'dist/app.js': 'app/js/app.js'
+                'dist/app.js': 'dist/app.js'
             }
         }
     },
@@ -133,6 +135,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-angular-templates');
 
   grunt.registerTask('default', [
-    'haml', 'sass', 'ngtemplates', 'babel', 'browserify', 'concat:app', 'concat:lib', 'concat:dist', 'ngAnnotate'
+    'haml', 'sass', 'ngtemplates', 'concat:app', 'babel', 'browserify',  'concat:lib', 'concat:dist', 'ngAnnotate'
   ]);
 };
