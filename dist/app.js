@@ -4,9 +4,18 @@
 angular.module('app', []);class HomeCtrl {
   constructor($rootScope, $scope, $timeout) {
 
-    let componentManager = new window.ComponentManager();
+    $scope.tags = [];
 
-    console.log(componentManager);
+    var permissions = [{
+      name: "stream-items",
+      content_types: ["Tag"]
+    }, {
+      name: "stream-context-item"
+    }];
+
+    let componentManager = new window.ComponentManager(permissions, function () {
+      // on ready
+    });
 
     $scope.formData = {};
     let defaultHeight = 45;
