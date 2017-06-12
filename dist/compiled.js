@@ -33609,6 +33609,8 @@ angular.module('app', []);class HomeCtrl {
 
     $scope.tags = [];
 
+    var delimitter = ".";
+
     var permissions = [{
       name: "stream-items",
       content_types: ["Tag"]
@@ -33626,12 +33628,21 @@ angular.module('app', []);class HomeCtrl {
     $scope.tagsInputChange = function ($event) {
       var input = $scope.formData.input;
       var lastTag = input.split("#").slice(-1)[0];
-
-      $scope.results = $scope.tags.filter(function (tag) {
-        return lastTag.length && tag.content.title.startsWith(lastTag);
-      }).sort(function (a, b) {
-        return a.content.title > b.content.title;
-      });
+      if (lastTag) {
+        $scope.results = $scope.tags.filter(function (tag) {
+          var comps = tag.content.title.split(delimitter);
+          for (var comp of comps) {
+            if (comp.length && comp.startsWith(lastTag)) {
+              return true;
+            }
+          }
+          return tag.content.title.startsWith(lastTag);
+        }).sort(function (a, b) {
+          return a.content.title > b.content.title;
+        });
+      } else {
+        $scope.results = [];
+      }
 
       $scope.showAutocomplete($scope.results.length > 0);
       $scope.highlightTag($scope.results[0]);
@@ -33646,7 +33657,16 @@ angular.module('app', []);class HomeCtrl {
     };
 
     $scope.selectTag = function (tag) {
-      componentManager.associateItem(tag);
+      var comps = tag.content.title.split(delimitter);
+      for (var index = 1; index < comps.length + 1; index++) {
+        var tagName = comps.slice(0, index).join(delimitter);
+        var _tag = $scope.tags.filter(function (candidate) {
+          return candidate.content.title === tagName;
+        })[0];
+
+        componentManager.associateItem(_tag);
+      }
+
       $scope.showAutocomplete(false);
       $scope.formData.input = "";
       $scope.highlightedTag = null;
