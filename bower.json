@@ -1,9 +1,9 @@
 {
-  "name": "TagsAutocomplete",
+  "name": "sn-autocomplete-tags",
   "description": "",
   "main": "",
   "license": "MIT",
-  "homepage": "https://github.com/sn-extensions/folders-component",
+  "homepage": "https://github.com/sn-extensions/autocomplete-tags",
   "ignore": [
     "**/.*",
     "node_modules",
