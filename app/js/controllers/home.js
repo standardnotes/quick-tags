@@ -20,10 +20,11 @@ class HomeCtrl {
     });
 
     $scope.formData = {};
-    let defaultHeight = 45;
+    let defaultHeight = 50;
 
     $scope.tagsInputChange = function($event) {
       var input = $scope.formData.input;
+
       var lastTag = input.split("#").slice(-1)[0];
       if(lastTag) {
         $scope.results = $scope.tags.filter(function(tag){
