@@ -1,4 +1,5 @@
 class HomeCtrl {
+
   constructor($rootScope, $scope, $timeout) {
 
     $scope.tags = [];
