@@ -5,7 +5,7 @@ module.exports = function(grunt) {
     watch: {
       js: {
         files: ['./app/js/**/*.js'],
-        tasks: ['concat:app', 'babel', 'browserify',  'concat:lib', 'concat:dist', 'ngAnnotate'],
+        tasks: ['concat:app', 'babel', 'browserify',  'concat:lib', 'concat:dist', 'ngAnnotate', 'uglify'],
         options: {
           spawn: false,
         },
@@ -57,7 +57,7 @@ module.exports = function(grunt) {
         separator: ';',
       },
       app: {
-        src: ['bower_components/components-api/dist/dist.js', 'app/js/**/*.js'],
+        src: ['node_modules/sn-components-api/dist/dist.js', 'app/js/**/*.js'],
         dest: 'dist/app.js',
       },
 

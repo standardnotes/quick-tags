@@ -75,7 +75,7 @@ class HomeCtrl {
       componentManager.deassociateItem(tag);
     }
 
-    componentManager.streamItems(function(newTags) {
+    componentManager.streamItems(['Tag'], function(newTags) {
       $timeout(function(){
         var allTags = $scope.tags || [];
         for(var tag of newTags) {
