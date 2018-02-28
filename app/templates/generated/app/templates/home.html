@@ -1,11 +1,10 @@
+<div class='flex-container'>
 <input class='body-text-color' ng-change='tagsInputChange($event)' ng-keyup='$event.keyCode == 13 &amp;&amp; onEnter()' ng-model='formData.input' placeholder='Add tags...' type='text'>
 <div class='associates'>
-<div class='empty' ng-if='activeTags.length === 0'>
-No associated tags
-</div>
 <div class='associate' ng-click='removeActiveTag(tag)' ng-repeat='tag in activeTags'>
 <div class='circle'></div>
 <div class='title'>{{tag.content.title}}</div>
+</div>
 </div>
 </div>
 <div class='results body-background-color body-text-color' ng-if='formData.showAutocomplete'>

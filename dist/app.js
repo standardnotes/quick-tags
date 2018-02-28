@@ -434,7 +434,7 @@ var HomeCtrl = function HomeCtrl($rootScope, $scope, $timeout) {
   });
 
   $scope.formData = {};
-  var defaultHeight = 50;
+  var defaultHeight = 28;
 
   $scope.tagsInputChange = function ($event) {
     var input = $scope.formData.input;
@@ -486,7 +486,11 @@ var HomeCtrl = function HomeCtrl($rootScope, $scope, $timeout) {
     $scope.formData.showAutocomplete = show;
 
     $timeout(function () {
-      componentManager.setSize("content", "100%", document.documentElement.scrollHeight);
+      if (show) {
+        componentManager.setSize("content", "100%", document.documentElement.scrollHeight);
+      } else {
+        componentManager.setSize("content", "100%", defaultHeight);
+      }
     });
   };
 

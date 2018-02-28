@@ -21,7 +21,7 @@ class HomeCtrl {
     });
 
     $scope.formData = {};
-    let defaultHeight = 50;
+    let defaultHeight = 28;
 
     $scope.tagsInputChange = function($event) {
       var input = $scope.formData.input;
@@ -51,7 +51,11 @@ class HomeCtrl {
       $scope.formData.showAutocomplete = show;
 
       $timeout(function(){
-        componentManager.setSize("content", "100%", document.documentElement.scrollHeight);
+        if(show) {
+          componentManager.setSize("content", "100%", document.documentElement.scrollHeight);
+        } else {
+          componentManager.setSize("content", "100%", defaultHeight);
+        }
       })
     }
 

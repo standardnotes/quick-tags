@@ -5,7 +5,8 @@ module.exports = function(grunt) {
     watch: {
       js: {
         files: ['./app/js/**/*.js'],
-        tasks: ['concat:app', 'babel', 'browserify',  'concat:lib', 'concat:dist', 'ngAnnotate', 'uglify'],
+        tasks: ['ngtemplates', 'concat:app', 'babel', 'browserify',
+            'concat:lib', 'concat:dist', 'ngAnnotate', 'uglify'],
         options: {
           spawn: false,
         },
@@ -13,7 +14,8 @@ module.exports = function(grunt) {
 
       haml: {
         files: ['./app/templates/**/*.haml'],
-        tasks: ['newer:haml', 'ngtemplates', 'concat'],
+        tasks: ['newer:haml', 'haml', 'ngtemplates', 'concat:app', 'babel', 'browserify',
+            'concat:lib', 'concat:dist', 'ngAnnotate', 'uglify'],
         options: {
           spawn: false,
         },

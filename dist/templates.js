@@ -33,14 +33,13 @@ angular.module('app').run(['$templateCache', function($templateCache) {
 
 
   $templateCache.put('home.html',
+    "<div class='flex-container'>\n" +
     "<input class='body-text-color' ng-change='tagsInputChange($event)' ng-keyup='$event.keyCode == 13 &amp;&amp; onEnter()' ng-model='formData.input' placeholder='Add tags...' type='text'>\n" +
     "<div class='associates'>\n" +
-    "<div class='empty' ng-if='activeTags.length === 0'>\n" +
-    "No associated tags\n" +
-    "</div>\n" +
     "<div class='associate' ng-click='removeActiveTag(tag)' ng-repeat='tag in activeTags'>\n" +
     "<div class='circle'></div>\n" +
     "<div class='title'>{{tag.content.title}}</div>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class='results body-background-color body-text-color' ng-if='formData.showAutocomplete'>\n" +

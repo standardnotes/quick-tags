@@ -66,12 +66,17 @@ body {
 }
 
 input {
-  width: 100%;
+  padding-top: 5px;
+  width: 80px;
   text-overflow: ellipsis;
   border: none;
   outline: none;
   font-size: 14px;
   background-color: transparent;
+}
+
+.flex-container {
+  display: flex;
 }
 
 .circle {
@@ -106,6 +111,7 @@ input {
   background-color: white;
   border: 1px solid rgba(128, 128, 128, 0.2);
   border-radius: 4px;
+  margin-top: 5px;
 }
 .results .result {
   padding: 2px 10px;
