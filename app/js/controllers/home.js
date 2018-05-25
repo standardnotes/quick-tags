@@ -24,7 +24,7 @@ class HomeCtrl {
     let defaultHeight = 28;
 
     $scope.tagsInputChange = function($event) {
-      var input = $scope.formData.input;
+      var input = $scope.formData.input || "";
 
       var lastTag = input.split("#").slice(-1)[0];
       if(lastTag) {
