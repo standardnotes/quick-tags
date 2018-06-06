@@ -574,6 +574,7 @@ var HomeCtrl = function HomeCtrl($rootScope, $scope, $timeout) {
   componentManager.streamItems(['Tag'], function (newTags) {
     $timeout(function () {
       var allTags = $scope.tags || [];
+
       var _iteratorNormalCompletion4 = true;
       var _didIteratorError4 = false;
       var _iteratorError4 = undefined;
@@ -585,10 +586,16 @@ var HomeCtrl = function HomeCtrl($rootScope, $scope, $timeout) {
           var existing = allTags.filter(function (tagCandidate) {
             return tagCandidate.uuid === tag.uuid;
           })[0];
+
           if (existing) {
             Object.assign(existing, tag);
           } else {
             allTags.push(tag);
+          }
+
+          if (tag.deleted) {
+            var index = allTags.indexOf(existing || tag);
+            allTags.splice(index, 1);
           }
         }
       } catch (err) {

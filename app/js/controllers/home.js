@@ -82,16 +82,24 @@ class HomeCtrl {
     componentManager.streamItems(['Tag'], function(newTags) {
       $timeout(function(){
         var allTags = $scope.tags || [];
+
         for(var tag of newTags) {
           var existing = allTags.filter(function(tagCandidate){
             return tagCandidate.uuid === tag.uuid;
           })[0];
+
           if(existing) {
             Object.assign(existing, tag);
           } else {
             allTags.push(tag);
           }
+
+          if(tag.deleted) {
+            var index = allTags.indexOf(existing || tag);
+            allTags.splice(index, 1);
+          }
         }
+
         $scope.tags = allTags;
       })
 
