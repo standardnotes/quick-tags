@@ -34427,6 +34427,13 @@ var HomeCtrl = function HomeCtrl($rootScope, $scope, $timeout) {
     $scope.highlightTag($scope.results[0]);
   };
 
+  $scope.resetContext = function () {
+    $scope.formData.input = "";
+    $scope.highlightedTag = null;
+    $scope.results = [];
+    $scope.showAutocomplete(false);
+  };
+
   $scope.showAutocomplete = function (show) {
     $scope.formData.showAutocomplete = show;
 
@@ -34450,9 +34457,7 @@ var HomeCtrl = function HomeCtrl($rootScope, $scope, $timeout) {
       componentManager.associateItem(_tag);
     }
 
-    $scope.showAutocomplete(false);
-    $scope.formData.input = "";
-    $scope.highlightedTag = null;
+    $scope.resetContext();
   };
 
   $scope.removeActiveTag = function (tag) {
@@ -34507,6 +34512,9 @@ var HomeCtrl = function HomeCtrl($rootScope, $scope, $timeout) {
 
   componentManager.streamContextItem(function (item) {
     $timeout(function () {
+
+      $scope.resetContext();
+
       var tags = $scope.tags.filter(function (tag) {
         var matchingReference = item.content.references.filter(function (ref) {
           return ref.uuid === tag.uuid;
