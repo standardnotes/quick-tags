@@ -23,24 +23,36 @@ class HomeCtrl {
     $scope.formData = {};
     let defaultHeight = 28;
 
+    $scope.dummyTag = {dummy: true, content: {}};
+
     $scope.tagsInputChange = function($event) {
       var input = $scope.formData.input || "";
 
-      var lastTag = input.split("#").slice(-1)[0];
-      if(lastTag) {
-        $scope.results = $scope.tags.filter(function(tag){
+      var hasExactMatch = false;
+      var tagInput = input.split("#").slice(-1)[0];
+      if(tagInput) {
+        $scope.results = $scope.tags.filter((tag) => {
+          if(!hasExactMatch) {
+            hasExactMatch = tag.content.title == tagInput;
+          }
           var comps = tag.content.title.split(delimitter);
           for(var comp of comps) {
-            if(comp.length && comp.startsWith(lastTag)) {
+            if(comp.length && comp.startsWith(tagInput)) {
               return true;
             }
           }
-          return tag.content.title.startsWith(lastTag);
+          return tag.content.title.startsWith(tagInput);
         }).sort(function(a, b){
           return a.content.title > b.content.title;
         })
       } else {
         $scope.results = [];
+      }
+
+      if(!hasExactMatch && tagInput.length> 0) {
+        $scope.dummyTag.content.rawTitle = tagInput;
+        $scope.dummyTag.content.title = `Create new tag '${tagInput}'`;
+        $scope.results.push($scope.dummyTag);
       }
 
       $scope.showAutocomplete($scope.results.length > 0);
@@ -67,6 +79,11 @@ class HomeCtrl {
     }
 
     $scope.selectTag = function(tag) {
+      if(tag.dummy) {
+        $scope.createTag(tag.content.rawTitle);
+        return;
+      }
+
       var comps = tag.content.title.split(delimitter);
       for(var index = 1; index < comps.length + 1; index++) {
         var tagName = comps.slice(0, index).join(delimitter);
@@ -159,10 +176,11 @@ class HomeCtrl {
     $scope.onEnter = function() {
       if($scope.highlightedTag) {
         $scope.selectTag($scope.highlightedTag);
-      } else if($scope.formData.input) {
-        componentManager.createItem({content_type: "Tag", content: {title: $scope.formData.input}});
-        $scope.formData.input = "";
       }
+    }
+
+    $scope.createTag = function(title) {
+      componentManager.createItem({content_type: "Tag", content: {title: title}});
     }
 
     componentManager.setSize("container", "100%", defaultHeight);
