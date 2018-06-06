@@ -1,6 +1,6 @@
 {
   "name": "sn-autocomplete-tags",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "devDependencies": {
     "grunt": "^1.0.1",
     "grunt-contrib-cssmin": "^1.0.2",
