@@ -34524,26 +34524,40 @@ var HomeCtrl = function HomeCtrl($rootScope, $scope, $timeout) {
       }
 
       $scope.tags = allTags;
+      $scope.refreshNoteReferences();
     });
   }.bind(this));
 
   componentManager.streamContextItem(function (item) {
+    $scope.note = item;
     $timeout(function () {
-
-      $scope.resetContext();
-
-      var tags = $scope.tags.filter(function (tag) {
-        var matchingReference = item.content.references.filter(function (ref) {
-          return ref.uuid === tag.uuid;
-        })[0];
-        return matchingReference;
-      });
-
-      $scope.activeTags = tags.sort(function (a, b) {
-        return a.content.title > b.content.title;
-      });
+      $scope.refreshNoteReferences();
     });
   });
+
+  $scope.refreshNoteReferences = function () {
+    $scope.resetContext();
+
+    if (!$scope.note) {
+      return;
+    }
+
+    var tags = $scope.tags.filter(function (tag) {
+      var noteHasTag = $scope.note.content.references.find(function (ref) {
+        return ref.uuid === tag.uuid;
+      });
+
+      var tagHasNote = tag.content.references.find(function (ref) {
+        return ref.uuid == $scope.note.uuid;
+      });
+
+      return noteHasTag || tagHasNote;
+    });
+
+    $scope.activeTags = tags.sort(function (a, b) {
+      return a.content.title > b.content.title;
+    });
+  };
 
   $scope.highlightTag = function (tag) {
     $scope.highlightedTag = tag;
