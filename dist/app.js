@@ -514,7 +514,7 @@ var HomeCtrl = function HomeCtrl($rootScope, $scope, $timeout) {
           for (var _iterator3 = comps[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
             var comp = _step3.value;
 
-            if (comp.length && comp.startsWith(tagInput)) {
+            if (comp.length && comp.toLowerCase().startsWith(tagInput.toLowerCase())) {
               return true;
             }
           }
@@ -533,7 +533,7 @@ var HomeCtrl = function HomeCtrl($rootScope, $scope, $timeout) {
           }
         }
 
-        return tag.content.title.startsWith(tagInput);
+        return tag.content.title.toLowerCase().startsWith(tagInput.toLowerCase());
       }).sort(function (a, b) {
         return a.content.title > b.content.title;
       });

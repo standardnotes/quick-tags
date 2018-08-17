@@ -37,11 +37,11 @@ class HomeCtrl {
           }
           var comps = tag.content.title.split(delimitter);
           for(var comp of comps) {
-            if(comp.length && comp.startsWith(tagInput)) {
+            if(comp.length && comp.toLowerCase().startsWith(tagInput.toLowerCase())) {
               return true;
             }
           }
-          return tag.content.title.startsWith(tagInput);
+          return tag.content.title.toLowerCase().startsWith(tagInput.toLowerCase());
         }).sort(function(a, b){
           return a.content.title > b.content.title;
         })
