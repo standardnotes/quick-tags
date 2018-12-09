@@ -19,6 +19,7 @@
     "grunt-contrib-uglify": "^2.0.0",
     "grunt-ng-annotate": "^3.0.0",
     "babel-preset-es2015": "^6.24.1",
-    "sn-components-api": "1.1.3"
+    "sn-components-api": "1.1.7",
+    "sn-stylekit": "2.0.1"
   }
 }

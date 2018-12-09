@@ -3,6 +3,7 @@
 html {
   height: 45px;
   background-color: transparent;
+  font-size: var(--sn-stylekit-base-font-size);
   overflow: hidden;
 }
 
@@ -18,7 +19,8 @@ body {
     "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   height: 45px;
-  font-size: 14px;
+  font-size: var(--sn-stylekit-font-size-p);
+  color: var(--sn-stylekit-foreground-color);
 }
 
 input {
@@ -27,11 +29,10 @@ input {
   text-overflow:ellipsis;
   border: none;
   outline: none;
-  font-size: 14px;
+  font-size: var(--sn-stylekit-font-size-p);
   background-color: transparent;
+  color: var(--sn-stylekit-foreground-color);
 }
-
-$blue-color: rgba(#086dd6, 0.5);
 
 .flex-container {
   display: flex;
@@ -43,7 +44,7 @@ $blue-color: rgba(#086dd6, 0.5);
   width: 10px;
   border-radius: 50%;
   margin-right: 4px;
-  background: $blue-color;
+  background: var(--sn-stylekit-info-color);
   vertical-align: middle;
 }
 
@@ -52,22 +53,36 @@ $blue-color: rgba(#086dd6, 0.5);
   .empty {
     opacity: 0.1;
   }
+
   .associate {
     display: inline-block;
     margin-right: 10px;
     cursor: pointer;
+
+    &:hover {
+      .title {
+        color: var(--sn-stylekit-danger-color);
+      }
+      .circle {
+        background-color: var(--sn-stylekit-danger-color);
+      }
+    }
+
     .title {
       display: inline-block;
     }
+
     .circle {
-      background-color: $blue-color;
+      background-color: var(--sn-stylekit-info-color);
     }
+
   }
 }
 
 .results {
-  background-color: white;
-  border: 1px solid rgba(gray, 0.2);
+  background-color: var(--sn-stylekit-contrast-background-color);
+  color: var(--sn-stylekit-contrast-foreground-color);
+  border: 1px solid var(--sn-stylekit-contrast-border-color);
   border-radius: 4px;
   margin-top: 5px;
 
@@ -78,7 +93,13 @@ $blue-color: rgba(#086dd6, 0.5);
     padding-top: 10px;
 
     &.highlighted {
-      background-color: rgba(gray, 0.1);
+      background-color: var(--sn-stylekit-info-color);
+      color: var(--sn-stylekit-info-contrast-color);
+
+      .circle {
+        background-color: var(--sn-stylekit-info-contrast-color);
+        color: var(--sn-stylekit-info-color);
+      }
     }
 
     .title {

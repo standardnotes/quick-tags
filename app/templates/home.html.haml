@@ -1,5 +1,5 @@
 .flex-container
-  %input.body-text-color{"type" => "text", "placeholder" => "Add tags...", "ng-model" => "formData.input",
+  %input{"type" => "text", "placeholder" => "Add tags...", "ng-model" => "formData.input",
   "ng-change" => "tagsInputChange($event)", "ng-keyup" => "$event.keyCode == 13 && onEnter()"}
 
   .associates
@@ -7,7 +7,7 @@
       .circle
       .title {{tag.content.title}}
 
-.results.body-background-color.body-text-color{"ng-if" => "formData.showAutocomplete"}
+.results{"ng-if" => "formData.showAutocomplete"}
   .result{"ng-repeat" => "tag in results", "ng-click" => "selectTag(tag)", "ng-mouseover" => "highlightTag(tag)", "ng-class" => "{'highlighted' : highlightedTag == tag}"}
     .circle
     .title {{tag.content.title}}

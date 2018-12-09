@@ -23,7 +23,7 @@ module.exports = function(grunt) {
 
       css: {
         files: ['./app/style/**/*.scss'],
-        tasks: ['sass'],
+        tasks: ['sass', 'concat:css'],
         options: {
           spawn: false,
         },
@@ -68,6 +68,14 @@ module.exports = function(grunt) {
           'node_modules/angular/angular.js',
         ],
         dest: 'dist/lib.js',
+      },
+
+      css: {
+        options: {
+          separator: '',
+        },
+        src: ['node_modules/sn-stylekit/dist/stylekit.css', 'dist/app.css'],
+        dest: 'dist/app.css',
       },
 
       dist: {
@@ -144,6 +152,6 @@ module.exports = function(grunt) {
 
   grunt.registerTask('default', [
     'haml', 'sass', 'ngtemplates', 'concat:app', 'babel', 'browserify',
-    'concat:lib', 'concat:dist', 'ngAnnotate', 'uglify'
+    'concat:lib', 'concat:dist', 'concat:css', 'ngAnnotate', 'uglify'
   ]);
 };

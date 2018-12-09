@@ -1234,12 +1234,6 @@ input {
   margin-right: 10px;
   cursor: pointer;
 }
-.associates .associate:hover .title {
-  color: var(--sn-stylekit-danger-color);
-}
-.associates .associate:hover .circle {
-  background-color: var(--sn-stylekit-danger-color);
-}
 .associates .associate .title {
   display: inline-block;
 }
@@ -1261,12 +1255,7 @@ input {
   padding-top: 10px;
 }
 .results .result.highlighted {
-  background-color: var(--sn-stylekit-info-color);
-  color: var(--sn-stylekit-info-contrast-color);
-}
-.results .result.highlighted .circle {
-  background-color: var(--sn-stylekit-info-contrast-color);
-  color: var(--sn-stylekit-info-color);
+  background-color: var(--sn-stylekit-contrast-background-color);
 }
 .results .result .title {
   display: inline-block;
